@@ -1,40 +1,49 @@
+/* eslint-disable no-unused-vars */
 import { useListPokemonsQuery } from 'shared/api/pokemons';
-import PokemonCard from './pokemon-card';
 
-import { Grid, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import PokemonModal from './modal';
+import PokemonSearch from './search';
+import Filter from './filter';
+import Pagination from './pagination';
+import { Grid } from '@mui/material';
+import PokemonCard from './card';
 
 const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
     padding: 10
-  },
-  formControl: {
-    margin: 10,
-    minWidth: 120
   }
 }));
 
 const Pokemons = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [typeFilter, setTypeFilter] = useState('');
-  const [selectedPokemon, setSelectedPokemon] = useState(null);
   const classes = useStyles();
+  const [searchText, setSearchText] = useState('');
+  const [typeFilters, setTypeFilters] = useState([]);
+  const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
 
   const { data: pokemonsList, isSuccess } = useListPokemonsQuery();
 
-  // const filteredPokemons = pokemons
-  //   .filter((pokemon) => pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  //   .filter((pokemon) => (typeFilter ? pokemon.types.includes(typeFilter) : true));
-
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
+  const handleSearchTextChange = (event) => {
+    setSearchText(event.target.value);
+    setPage(1);
   };
 
-  const handleTypeFilter = (event) => {
-    setTypeFilter(event.target.value);
+  const handleTypeFilterChange = (event, newTypeFilters) => {
+    setTypeFilters(newTypeFilters);
+    setPage(1);
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const handleItemsPerPageChange = (event) => {
+    setItemsPerPage(parseInt(event.target.value, 10));
+    setPage(1);
   };
 
   const handleOpenModal = (pokemon) => {
@@ -45,33 +54,42 @@ const Pokemons = () => {
     setSelectedPokemon(null);
   };
 
+  // const filteredPokemons = pokemons.filter((pokemon) => {
+  //   const searchTextMatch = pokemon.name.toLowerCase().includes(searchText.toLowerCase());
+  //   const typeFilterMatch =
+  //     typeFilters.length === 0 || typeFilters.some((type) => pokemon.types.includes(type));
+  //   return searchTextMatch && typeFilterMatch;
+  // });
+
+  // const numPages = Math.ceil(filteredPokemons.length / itemsPerPage);
+  // const startIndex = (page - 1) * itemsPerPage;
+  // const endIndex = startIndex + itemsPerPage;
+
   if (isSuccess) {
     return (
       <div className={classes.root}>
-        <FormControl className={classes.formControl}>
-          <TextField
-            id="search"
-            label="Search"
-            variant="outlined"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="type-filter-label">Type</InputLabel>
-          <Select
-            labelId="type-filter-label"
-            id="type-filter"
-            value={typeFilter}
-            onChange={handleTypeFilter}>
-            <MenuItem value="">All Types</MenuItem>
-          </Select>
-        </FormControl>
+        <PokemonSearch
+          searchText={searchText}
+          handleSearchTextChange={handleSearchTextChange}
+          setSearchText={setSearchText}
+        />
+        <Filter
+          typeFilters={typeFilters}
+          handleTypeFilterChange={handleTypeFilterChange}
+          setTypeFilters={setTypeFilters}
+        />
         <Grid container spacing={3}>
           {pokemonsList.results.map((item) => (
             <PokemonCard key={item.name} url={item.url} handleOpenModal={handleOpenModal} />
           ))}
         </Grid>
+        <Pagination
+          // numPages={numPages}
+          itemsPerPage={itemsPerPage}
+          page={page}
+          handleItemsPerPageChange={handleItemsPerPageChange}
+          handlePageChange={handlePageChange}
+        />
         <PokemonModal selectedPokemon={selectedPokemon} handleCloseModal={handleCloseModal} />
       </div>
     );

@@ -6,6 +6,7 @@ import { useCurrentPokemonQuery } from 'shared/api/pokemons';
 const useStyles = makeStyles(() => ({
   card: {
     height: '100%',
+    minWidth: 275,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
