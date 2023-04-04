@@ -8,14 +8,15 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    cursor: 'pointer'
   },
   cardMedia: {
     paddingTop: '100%'
   }
 }));
 
-const PokemonCard = ({ url = '' }) => {
+const PokemonCard = ({ url = '', handleOpenModal = () => {} }) => {
   const classes = useStyles();
   const { data: pokemon, isSuccess } = useCurrentPokemonQuery(
     {
@@ -26,7 +27,7 @@ const PokemonCard = ({ url = '' }) => {
 
   if (isSuccess) {
     return (
-      <Grid item xs={12} sm={6} md={4} key={pokemon.id}>
+      <Grid item xs={12} sm={6} md={4} key={pokemon.id} onClick={() => handleOpenModal(pokemon)}>
         <Card className={classes.card}>
           <CardMedia
             className={classes.cardMedia}
@@ -38,7 +39,7 @@ const PokemonCard = ({ url = '' }) => {
               {pokemon.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              {pokemon.types.join(', ')}
+              {pokemon.types.map((type) => type.type.name).join(', ')}
             </Typography>
           </CardContent>
         </Card>
