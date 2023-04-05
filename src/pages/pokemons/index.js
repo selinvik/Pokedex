@@ -3,12 +3,8 @@ import { useListPokemonsQuery } from 'shared/api/pokemons';
 
 import { useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import PokemonModal from './modal';
-import PokemonSearch from './search';
-import Filter from './filter';
-import Pagination from './pagination';
+import { Modal, Search, Filter, Pagination, Card } from './ui';
 import { Grid } from '@mui/material';
-import PokemonCard from './card';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteTypeFilters,
@@ -78,7 +74,7 @@ const Pokemons = () => {
   if (isSuccess) {
     return (
       <div className={classes.root}>
-        <PokemonSearch
+        <Search
           searchText={searchText}
           handleSearchTextChange={handleSearchTextChange}
           handleDeleteSearchText={handleDeleteSearchText}
@@ -90,7 +86,7 @@ const Pokemons = () => {
         />
         <Grid container spacing={3}>
           {pokemonsList.results.map((item) => (
-            <PokemonCard
+            <Card
               key={item.name}
               url={item.url}
               searchText={searchText}
@@ -106,7 +102,7 @@ const Pokemons = () => {
           handleOffset={handleOffset}
           handleLimit={handleLimit}
         />
-        <PokemonModal selectedPokemon={selectedPokemon} handleCloseModal={handleCloseModal} />
+        <Modal selectedPokemon={selectedPokemon} handleCloseModal={handleCloseModal} />
       </div>
     );
   }
