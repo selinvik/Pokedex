@@ -24,7 +24,6 @@ const Pokemons = () => {
   const classes = useStyles();
   const [searchText, setSearchText] = useState('');
   const [typeFilters, setTypeFilters] = useState([]);
-  const [page, setPage] = useState(1);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
   const { offset, limit } = useSelector((state) => state.rootReducer.pokemons);
@@ -36,12 +35,12 @@ const Pokemons = () => {
 
   const handleSearchTextChange = (event) => {
     setSearchText(event.target.value);
-    setPage(1);
+    // setPage(1);
   };
 
   const handleTypeFilterChange = (event, newTypeFilters) => {
     setTypeFilters(newTypeFilters);
-    setPage(1);
+    // setPage(1);
   };
 
   const handleOffset = (event, value) => {
