@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 const PokemonSearch = ({
   searchText = '',
   handleSearchTextChange = () => {},
-  setSearchText = () => {}
+  handleDeleteSearchText = () => {}
 }) => {
   const classes = useStyles();
 
@@ -37,7 +37,7 @@ const PokemonSearch = ({
         className={classes.searchButton}
         variant="contained"
         color="primary"
-        onClick={() => setSearchText('')}>
+        onClick={handleDeleteSearchText}>
         Clear
       </Button>
     </div>

@@ -10,7 +10,13 @@ import Pagination from './pagination';
 import { Grid } from '@mui/material';
 import PokemonCard from './card';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTypeFilters, setLimit, setOffset, setTypeFilters } from 'app/store/reducer/pokemons';
+import {
+  deleteTypeFilters,
+  setLimit,
+  setOffset,
+  setSearchText,
+  setTypeFilters
+} from 'app/store/reducer/pokemons';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -22,20 +28,16 @@ const useStyles = makeStyles(() => ({
 const Pokemons = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [searchText, setSearchText] = useState('');
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
-  const { offset, limit, typeFilters } = useSelector((state) => state.rootReducer.pokemons);
+  const { offset, limit, searchText, typeFilters } = useSelector(
+    (state) => state.rootReducer.pokemons
+  );
 
   const { data: pokemonsList, isSuccess } = useListPokemonsQuery({
     offset,
     limit
   });
-
-  const handleSearchTextChange = (event) => {
-    setSearchText(event.target.value);
-    // setPage(1);
-  };
 
   const handleOffset = (event, value) => {
     dispatch(setOffset(value));
@@ -43,6 +45,14 @@ const Pokemons = () => {
 
   const handleLimit = (event) => {
     dispatch(setLimit(parseInt(event.target.value, 10)));
+  };
+
+  const handleSearchTextChange = (event) => {
+    dispatch(setSearchText(event.target.value));
+  };
+
+  const handleDeleteSearchText = () => {
+    dispatch(setSearchText(''));
   };
 
   const handleTypeFilterChange = (event, newTypeFilters) => {
@@ -62,13 +72,6 @@ const Pokemons = () => {
     setSelectedPokemon(null);
   };
 
-  // const filteredPokemons = pokemons.filter((pokemon) => {
-  //   const searchTextMatch = pokemon.name.toLowerCase().includes(searchText.toLowerCase());
-  //   const typeFilterMatch =
-  //     typeFilters.length === 0 || typeFilters.some((type) => pokemon.types.includes(type));
-  //   return searchTextMatch && typeFilterMatch;
-  // });
-
   // const numPages = Math.ceil(filteredPokemons.length / itemsPerPage);
   // const startIndex = (page - 1) * itemsPerPage;
   // const endIndex = startIndex + itemsPerPage;
@@ -79,7 +82,7 @@ const Pokemons = () => {
         <PokemonSearch
           searchText={searchText}
           handleSearchTextChange={handleSearchTextChange}
-          setSearchText={setSearchText}
+          handleDeleteSearchText={handleDeleteSearchText}
         />
         <Filter
           typeFilters={typeFilters}
@@ -91,6 +94,7 @@ const Pokemons = () => {
             <PokemonCard
               key={item.name}
               url={item.url}
+              searchText={searchText}
               typeFilters={typeFilters}
               handleOpenModal={handleOpenModal}
             />

@@ -7,6 +7,7 @@ const resetOffset = (state) => {
 const initialState = {
   offset: 1,
   limit: 1,
+  searchText: '',
   typeFilters: []
 };
 
@@ -22,17 +23,21 @@ const pokemons = createSlice({
       state.limit = action.payload;
       resetOffset(state);
     },
+    setSearchText: (state, action) => {
+      state.searchText = action.payload;
+      resetOffset(state);
+    },
     setTypeFilters: (state, action) => {
       state.typeFilters = action.payload;
       resetOffset(state);
     },
     deleteTypeFilters: (state, action) => {
-      state.typeFilters.filter((t) => t !== action.payload);
+      state.typeFilters = state.typeFilters.filter((t) => t !== action.payload);
     }
   }
 });
 
-export const { resetState, setOffset, setLimit, setTypeFilters, deleteTypeFilters } =
+export const { resetState, setOffset, setLimit, setSearchText, setTypeFilters, deleteTypeFilters } =
   pokemons.actions;
 
 export default pokemons.reducer;
