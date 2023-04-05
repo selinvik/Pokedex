@@ -10,7 +10,7 @@ import Pagination from './pagination';
 import { Grid } from '@mui/material';
 import PokemonCard from './card';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLimit, setOffset } from 'app/store/reducer/pokemons';
+import { deleteTypeFilters, setLimit, setOffset, setTypeFilters } from 'app/store/reducer/pokemons';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -23,10 +23,9 @@ const Pokemons = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [searchText, setSearchText] = useState('');
-  const [typeFilters, setTypeFilters] = useState([]);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
-  const { offset, limit } = useSelector((state) => state.rootReducer.pokemons);
+  const { offset, limit, typeFilters } = useSelector((state) => state.rootReducer.pokemons);
 
   const { data: pokemonsList, isSuccess } = useListPokemonsQuery({
     offset,
@@ -38,17 +37,21 @@ const Pokemons = () => {
     // setPage(1);
   };
 
-  const handleTypeFilterChange = (event, newTypeFilters) => {
-    setTypeFilters(newTypeFilters);
-    // setPage(1);
-  };
-
   const handleOffset = (event, value) => {
     dispatch(setOffset(value));
   };
 
   const handleLimit = (event) => {
     dispatch(setLimit(parseInt(event.target.value, 10)));
+  };
+
+  const handleTypeFilterChange = (event, newTypeFilters) => {
+    console.log(newTypeFilters);
+    dispatch(setTypeFilters(newTypeFilters));
+  };
+
+  const handleDeleteTypeFilters = (type) => {
+    dispatch(deleteTypeFilters(type));
   };
 
   const handleOpenModal = (pokemon) => {
@@ -81,11 +84,16 @@ const Pokemons = () => {
         <Filter
           typeFilters={typeFilters}
           handleTypeFilterChange={handleTypeFilterChange}
-          setTypeFilters={setTypeFilters}
+          handleDeleteTypeFilters={handleDeleteTypeFilters}
         />
         <Grid container spacing={3}>
           {pokemonsList.results.map((item) => (
-            <PokemonCard key={item.name} url={item.url} handleOpenModal={handleOpenModal} />
+            <PokemonCard
+              key={item.name}
+              url={item.url}
+              typeFilters={typeFilters}
+              handleOpenModal={handleOpenModal}
+            />
           ))}
         </Grid>
         <Pagination

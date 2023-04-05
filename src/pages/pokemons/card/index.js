@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const PokemonCard = ({ url = '', handleOpenModal = () => {} }) => {
+const PokemonCard = ({ url = '', typeFilters = [], handleOpenModal = () => {} }) => {
   const classes = useStyles();
   const { data: pokemon, isSuccess } = useCurrentPokemonQuery(
     {
@@ -25,27 +25,30 @@ const PokemonCard = ({ url = '', handleOpenModal = () => {} }) => {
     },
     { skip: !url }
   );
+  const pokemonTypes = pokemon?.types.map((type) => type.type.name);
 
   if (isSuccess) {
-    return (
-      <Grid item xs={12} sm={6} md={4} key={pokemon.id} onClick={() => handleOpenModal(pokemon)}>
-        <Card className={classes.card}>
-          <CardMedia
-            className={classes.cardMedia}
-            image={pokemon.sprites.front_default}
-            title={pokemon.name}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {pokemon.name}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              {pokemon.types.map((type) => type.type.name).join(', ')}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-    );
+    if (typeFilters.length === 0 || typeFilters.some((type) => pokemonTypes.includes(type))) {
+      return (
+        <Grid item xs={12} sm={6} md={4} key={pokemon.id} onClick={() => handleOpenModal(pokemon)}>
+          <Card className={classes.card}>
+            <CardMedia
+              className={classes.cardMedia}
+              image={pokemon.sprites.front_default}
+              title={pokemon.name}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                {pokemon.name}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                {pokemon.types.map((type) => type.type.name).join(', ')}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      );
+    }
   }
 
   return null;

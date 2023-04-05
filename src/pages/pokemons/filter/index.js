@@ -36,7 +36,7 @@ const types = [
 const Filter = ({
   typeFilters = [],
   handleTypeFilterChange = () => {},
-  setTypeFilters = () => {}
+  handleDeleteTypeFilters = () => {}
 }) => {
   const classes = useStyles();
 
@@ -51,12 +51,7 @@ const Filter = ({
         ))}
       </ToggleButtonGroup>
       {typeFilters.map((type) => (
-        <Chip
-          key={type}
-          label={type}
-          className={classes.chip}
-          onDelete={() => setTypeFilters(typeFilters.filter((t) => t !== type))}
-        />
+        <Chip key={type} label={type} className={classes.chip} onDelete={handleDeleteTypeFilters} />
       ))}
     </div>
   );

@@ -1,17 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// const resetStateByFilters = (state) => {
-//   state.mapCenterPoint = {};
-//   state.openedReport = {
-//     name: '',
-//     areaId: null,
-//     areaName: ''
-//   };
-// };
+const resetOffset = (state) => {
+  state.offset = 1;
+};
 
 const initialState = {
   offset: 1,
-  limit: 1
+  limit: 1,
+  typeFilters: []
 };
 
 const pokemons = createSlice({
@@ -24,11 +20,19 @@ const pokemons = createSlice({
     },
     setLimit: (state, action) => {
       state.limit = action.payload;
-      state.offset = 1;
+      resetOffset(state);
+    },
+    setTypeFilters: (state, action) => {
+      state.typeFilters = action.payload;
+      resetOffset(state);
+    },
+    deleteTypeFilters: (state, action) => {
+      state.typeFilters.filter((t) => t !== action.payload);
     }
   }
 });
 
-export const { resetState, setOffset, setLimit } = pokemons.actions;
+export const { resetState, setOffset, setLimit, setTypeFilters, deleteTypeFilters } =
+  pokemons.actions;
 
 export default pokemons.reducer;
