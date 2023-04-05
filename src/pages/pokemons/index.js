@@ -56,7 +56,6 @@ const Pokemons = () => {
   };
 
   const handleTypeFilterChange = (event, newTypeFilters) => {
-    console.log(newTypeFilters);
     dispatch(setTypeFilters(newTypeFilters));
   };
 
