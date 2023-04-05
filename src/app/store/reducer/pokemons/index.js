@@ -10,17 +10,20 @@ import { createSlice } from '@reduxjs/toolkit';
 // };
 
 const initialState = {
-  filters: {}
+  limit: 10
 };
 
 const pokemons = createSlice({
   name: 'pokemons',
   initialState,
   reducers: {
-    resetState: () => initialState
+    resetState: () => initialState,
+    setLimit: (state, action) => {
+      state.limit = action.payload;
+    }
   }
 });
 
-export const { resetState } = pokemons.actions;
+export const { resetState, setLimit } = pokemons.actions;
 
 export default pokemons.reducer;

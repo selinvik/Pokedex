@@ -9,6 +9,8 @@ import Filter from './filter';
 import Pagination from './pagination';
 import { Grid } from '@mui/material';
 import PokemonCard from './card';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLimit } from 'app/store/reducer/pokemons';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -18,14 +20,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Pokemons = () => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [searchText, setSearchText] = useState('');
   const [typeFilters, setTypeFilters] = useState([]);
   const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
-  const { data: pokemonsList, isSuccess } = useListPokemonsQuery();
+  const { limit } = useSelector((state) => state.rootReducer.pokemons);
+
+  const { data: pokemonsList, isSuccess } = useListPokemonsQuery({
+    limit
+  });
 
   const handleSearchTextChange = (event) => {
     setSearchText(event.target.value);
@@ -41,8 +47,8 @@ const Pokemons = () => {
     setPage(value);
   };
 
-  const handleItemsPerPageChange = (event) => {
-    setItemsPerPage(parseInt(event.target.value, 10));
+  const handleLimit = (event) => {
+    dispatch(setLimit(parseInt(event.target.value, 10)));
     setPage(1);
   };
 
@@ -85,9 +91,9 @@ const Pokemons = () => {
         </Grid>
         <Pagination
           // numPages={numPages}
-          itemsPerPage={itemsPerPage}
+          limit={limit}
           page={page}
-          handleItemsPerPageChange={handleItemsPerPageChange}
+          handleLimit={handleLimit}
           handlePageChange={handlePageChange}
         />
         <PokemonModal selectedPokemon={selectedPokemon} handleCloseModal={handleCloseModal} />

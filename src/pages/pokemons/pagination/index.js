@@ -18,9 +18,9 @@ const useStyles = makeStyles(() => ({
 
 const Pagination = ({
   numPages = 0,
-  itemsPerPage = 10,
+  limit = 10,
   page = 0,
-  handleItemsPerPageChange = () => {},
+  handleLimit = () => {},
   handlePageChange = () => {}
 }) => {
   const classes = useStyles();
@@ -37,7 +37,7 @@ const Pagination = ({
       </div>
       <div>
         <Typography variant="subtitle1">Items per page:</Typography>
-        <ToggleButtonGroup value={itemsPerPage} exclusive onChange={handleItemsPerPageChange}>
+        <ToggleButtonGroup value={limit} exclusive onChange={handleLimit}>
           <ToggleButton value={10}>10</ToggleButton>
           <ToggleButton value={20}>20</ToggleButton>
           <ToggleButton value={50}>50</ToggleButton>

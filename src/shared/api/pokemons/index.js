@@ -3,7 +3,7 @@ import { api } from 'shared/api';
 const pokemonsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     listPokemons: builder.query({
-      query: () => 'pokemon'
+      query: ({ limit = 10 }) => `pokemon?limit=${limit}`
     }),
     currentPokemon: builder.query({
       query: ({ url }) => url
