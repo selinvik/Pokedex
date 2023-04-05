@@ -1,16 +1,15 @@
 /* eslint-disable no-unused-vars */
 import { useListPokemonsQuery } from 'shared/api/pokemons';
 
-import { useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Modal, Search, Filter, Pagination, Card } from './ui';
-import { Grid } from '@mui/material';
+import { Modal, Search, Filter, Pagination, List } from './ui';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteTypeFilters,
   setLimit,
   setOffset,
   setSearchText,
+  setSelectedPokemon,
   setTypeFilters
 } from 'app/store/reducer/pokemons';
 
@@ -24,9 +23,8 @@ const useStyles = makeStyles(() => ({
 const Pokemons = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [selectedPokemon, setSelectedPokemon] = useState(null);
 
-  const { offset, limit, searchText, typeFilters } = useSelector(
+  const { offset, limit, searchText, typeFilters, selectedPokemon } = useSelector(
     (state) => state.rootReducer.pokemons
   );
 
@@ -59,12 +57,8 @@ const Pokemons = () => {
     dispatch(deleteTypeFilters(type));
   };
 
-  const handleOpenModal = (pokemon) => {
-    setSelectedPokemon(pokemon);
-  };
-
   const handleCloseModal = () => {
-    setSelectedPokemon(null);
+    dispatch(setSelectedPokemon(null));
   };
 
   // const numPages = Math.ceil(filteredPokemons.length / itemsPerPage);
@@ -84,17 +78,7 @@ const Pokemons = () => {
           handleTypeFilterChange={handleTypeFilterChange}
           handleDeleteTypeFilters={handleDeleteTypeFilters}
         />
-        <Grid container spacing={3}>
-          {pokemonsList.results.map((item) => (
-            <Card
-              key={item.name}
-              url={item.url}
-              searchText={searchText}
-              typeFilters={typeFilters}
-              handleOpenModal={handleOpenModal}
-            />
-          ))}
-        </Grid>
+        <List pokemonsList={pokemonsList.results} />
         <Pagination
           // numPages={numPages}
           offset={offset}

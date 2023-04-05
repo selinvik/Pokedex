@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 import { Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { setSelectedPokemon } from 'app/store/reducer/pokemons';
+import { useDispatch, useSelector } from 'react-redux';
 import { useCurrentPokemonQuery } from 'shared/api/pokemons';
 
 const useStyles = makeStyles(() => ({
@@ -17,19 +19,21 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const PokemonCard = ({
-  url = '',
-  searchText = '',
-  typeFilters = [],
-  handleOpenModal = () => {}
-}) => {
+const Pokemon = ({ url = '' }) => {
+  const dispatch = useDispatch();
   const classes = useStyles();
+  const { searchText, typeFilters } = useSelector((state) => state.rootReducer.pokemons);
+
   const { data: pokemon, isSuccess } = useCurrentPokemonQuery(
     {
       url
     },
     { skip: !url }
   );
+
+  const handleOpenModal = (pokemon) => {
+    dispatch(setSelectedPokemon(pokemon));
+  };
 
   const pokemonTypes = pokemon?.types.map((type) => type.type.name);
   const pokemonFiltered =
@@ -61,4 +65,4 @@ const PokemonCard = ({
   return null;
 };
 
-export default PokemonCard;
+export default Pokemon;

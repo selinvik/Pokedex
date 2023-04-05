@@ -8,7 +8,8 @@ const initialState = {
   offset: 1,
   limit: 1,
   searchText: '',
-  typeFilters: []
+  typeFilters: [],
+  selectedPokemon: null
 };
 
 const pokemons = createSlice({
@@ -33,11 +34,21 @@ const pokemons = createSlice({
     },
     deleteTypeFilters: (state, action) => {
       state.typeFilters = state.typeFilters.filter((t) => t !== action.payload);
+    },
+    setSelectedPokemon: (state, action) => {
+      state.selectedPokemon = action.payload;
     }
   }
 });
 
-export const { resetState, setOffset, setLimit, setSearchText, setTypeFilters, deleteTypeFilters } =
-  pokemons.actions;
+export const {
+  resetState,
+  setOffset,
+  setLimit,
+  setSearchText,
+  setTypeFilters,
+  deleteTypeFilters,
+  setSelectedPokemon
+} = pokemons.actions;
 
 export default pokemons.reducer;
