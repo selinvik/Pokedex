@@ -10,7 +10,7 @@ import Pagination from './pagination';
 import { Grid } from '@mui/material';
 import PokemonCard from './card';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLimit } from 'app/store/reducer/pokemons';
+import { setLimit, setOffset } from 'app/store/reducer/pokemons';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,9 +27,10 @@ const Pokemons = () => {
   const [page, setPage] = useState(1);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
-  const { limit } = useSelector((state) => state.rootReducer.pokemons);
+  const { offset, limit } = useSelector((state) => state.rootReducer.pokemons);
 
   const { data: pokemonsList, isSuccess } = useListPokemonsQuery({
+    offset,
     limit
   });
 
@@ -43,13 +44,12 @@ const Pokemons = () => {
     setPage(1);
   };
 
-  const handlePageChange = (event, value) => {
-    setPage(value);
+  const handleOffset = (event, value) => {
+    dispatch(setOffset(value));
   };
 
   const handleLimit = (event) => {
     dispatch(setLimit(parseInt(event.target.value, 10)));
-    setPage(1);
   };
 
   const handleOpenModal = (pokemon) => {
@@ -91,10 +91,10 @@ const Pokemons = () => {
         </Grid>
         <Pagination
           // numPages={numPages}
+          offset={offset}
           limit={limit}
-          page={page}
+          handleOffset={handleOffset}
           handleLimit={handleLimit}
-          handlePageChange={handlePageChange}
         />
         <PokemonModal selectedPokemon={selectedPokemon} handleCloseModal={handleCloseModal} />
       </div>

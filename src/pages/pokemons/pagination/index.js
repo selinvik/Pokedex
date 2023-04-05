@@ -16,24 +16,13 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Pagination = ({
-  numPages = 0,
-  limit = 1,
-  page = 0,
-  handleLimit = () => {},
-  handlePageChange = () => {}
-}) => {
+const Pagination = ({ offset = 1, limit = 1, handleOffset = () => {}, handleLimit = () => {} }) => {
   const classes = useStyles();
 
   return (
     <div>
       <div className={classes.paginationContainer}>
-        <MaterialPagination
-          count={numPages}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-        />
+        <MaterialPagination count={1278} page={offset} onChange={handleOffset} color="primary" />
       </div>
       <div>
         <Typography variant="subtitle1">Items per page:</Typography>
