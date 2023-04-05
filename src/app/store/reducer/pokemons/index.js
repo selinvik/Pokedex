@@ -10,7 +10,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // };
 
 const initialState = {
-  limit: 10
+  limit: 1
 };
 
 const pokemons = createSlice({
